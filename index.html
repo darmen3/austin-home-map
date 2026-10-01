@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Austin Home Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--ink:#16202a;--mute:#5b6874;--card:#fff;--line:#dbe1e6;--accent:#0f6b6f;--ok:#1c7a4c;--mid:#8a5f00;--no:#a5382c}
+html,body{height:100%;margin:0}
+header{min-height:44px}
+body{font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--card)}
+header h1{font-size:16px;margin:0}
+header .s{color:var(--mute);font-size:12px}
+header a{color:var(--accent);font-weight:600;text-decoration:none;font-size:13px;margin-left:auto}
+#map{flex:1;min-height:0;height:calc(100vh - 48px)}
+.lmk{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.lmk.home{border-color:var(--accent);color:var(--accent)}
+.leaflet-popup-content{font-size:13px;line-height:1.4;margin:10px 14px}
+.leaflet-popup-content b{font-size:14px}
+.leaflet-popup-content a{color:var(--accent);font-weight:600}
+.legend{position:absolute;right:10px;bottom:28px;z-index:1000;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--mute);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+</style>
+</head>
+<body>
+<header><h1>Austin home map</h1><span class="s" id="asof">Loading…</span><a id="back" href="#" hidden>Back to the review page</a></header>
+<div id="map"></div>
+<div class="legend"><div><i style="background:var(--ok)"></i>Within target</div><div><i style="background:var(--mid)"></i>Tracked</div><div><i style="background:var(--no)"></i>Over the ceiling</div><div><i style="background:#999"></i>Off market</div><div style="margin-top:4px">Teal ring: Liked</div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+const usd=n=>"$"+Math.round(n).toLocaleString("en-US");
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const map=L.map("map",{zoomSnap:.5});
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+const COL={ok:"#1c7a4c",mid:"#8a5f00",no:"#a5382c",off:"#999999"};
+fetch("listings.json?"+Date.now()).then(r=>r.json()).then(d=>{
+  document.getElementById("asof").textContent=`${d.listings.length} homes · data as of ${d.as_of} · monthly cost at ${usd(d.assumptions.target)} target`;
+  if(d.review_url){const b=document.getElementById("back");b.href=d.review_url;b.hidden=false}
+  const pts=[];
+  (d.landmarks||[]).forEach(m=>{
+    L.marker([m.lat,m.lng],{icon:L.divIcon({className:"",html:`<div class="lmk${m.k==="home"?" home":""}">${esc(m.n)}</div>`,iconAnchor:[-6,10]}),interactive:false,keyboard:false}).addTo(map);
+    L.circleMarker([m.lat,m.lng],{radius:4,color:"#5b6874",fillColor:"#5b6874",fillOpacity:1,weight:1,interactive:false}).addTo(map);
+    pts.push([m.lat,m.lng]);
+  });
+  const h=(d.landmarks||[]).find(m=>m.k==="home"),w=(d.landmarks||[]).find(m=>m.k==="work");
+  if(h&&w)L.polyline([[h.lat,h.lng],[w.lat,w.lng]],{color:"#5b6874",weight:1.5,dashArray:"4 5",opacity:.7,interactive:false}).addTo(map);
+  d.listings.forEach(l=>{
+    if(!l.lat||!l.lng)return;pts.push([l.lat,l.lng]);
+    if(l.liked)L.circleMarker([l.lat,l.lng],{radius:12,color:"#0f6b6f",weight:2,fill:false,interactive:false}).addTo(map);
+    const mk=L.circleMarker([l.lat,l.lng],{radius:8,color:"#fff",weight:1.5,fillColor:COL[l.verdict_class]||COL.off,fillOpacity:.95}).addTo(map);
+    mk.bindTooltip(l.address,{direction:"top",offset:[0,-8]});
+    mk.bindPopup(`<b>${esc(l.address)}</b><br>${esc(l.city)} · ${usd(l.ask)} · ${esc(l.status)}<br>${esc(l.verdict)} · ${usd(l.allin)} a month<br>${esc(l.loan_type)} loan at ${(l.rate*100).toFixed(3).replace(/0+$/,"").replace(/\.$/,"")}% · ${l.miles_to_work.toFixed(1)} mi to PAM Health<br>${l.redfin?`<a href="${esc(l.redfin)}" target="_blank" rel="noopener">Redfin</a> · `:""}<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address+", "+l.city+", TX")}" target="_blank" rel="noopener">Google Maps</a>`);
+  });
+  const fit=()=>{map.invalidateSize();if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.08))};fit();requestAnimationFrame(fit);setTimeout(fit,300);window.addEventListener('resize',()=>map.invalidateSize());
+}).catch(()=>{document.getElementById("asof").textContent="Could not load listings.json."});
+})();
+</script>
+</body>
+</html>
