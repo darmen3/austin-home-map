@@ -113,9 +113,9 @@
    "verdict_class": "off",
    "liked": true,
    "miles_to_work": 1.2,
-   "redfin": "",
-   "sqft": null,
-   "lot": null
+   "redfin": "https://www.redfin.com/TX/Round-Rock/1915-Kempwood-Loop-78665/home/32647977",
+   "sqft": 2630,
+   "lot": 6098
   },
   {
    "id": "13413-abigail-adams-st",
@@ -189,8 +189,8 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 14.6,
-   "redfin": "",
-   "sqft": null,
+   "redfin": "https://www.redfin.com/TX/Austin/8524-Dryfield-Dr-78758/home/31497438",
+   "sqft": 2116,
    "lot": null
   },
   {
