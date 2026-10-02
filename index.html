@@ -14,7 +14,20 @@ header{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:10p
 header h1{font-size:16px;margin:0}
 header .s{color:var(--mute);font-size:12px}
 header a{color:var(--accent);font-weight:600;text-decoration:none;font-size:13px;margin-left:auto}
-#map{flex:1;min-height:0;height:calc(100vh - 48px)}
+.body{flex:1;min-height:0;display:flex;height:calc(100vh - 48px)}
+#map{flex:1;min-height:0}
+aside{width:300px;max-width:45vw;border-left:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;min-height:0}
+aside .bar{display:flex;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mute)}
+aside select{font:inherit;font-size:12px;flex:1;min-width:0}
+aside ol{list-style:none;margin:0;padding:0;overflow:auto;flex:1}
+aside li{padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center}
+aside li:hover{background:#f3f5f6}
+aside li i{width:10px;height:10px;border-radius:50%;display:inline-block}
+aside li .a{font-weight:600;font-size:13px}
+aside li .c{font-size:11.5px;color:var(--mute)}
+aside li .v{font-weight:600;font-variant-numeric:tabular-nums;font-size:13px;text-align:right}
+aside li .u{font-size:11px;color:var(--mute);text-align:right}
+@media (max-width:640px){.body{flex-direction:column}aside{width:auto;max-width:none;border-left:0;border-top:1px solid var(--line);height:40vh}}
 .lmk{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .lmk.home{border-color:var(--accent);color:var(--accent)}
 .leaflet-popup-content{font-size:13px;line-height:1.4;margin:10px 14px}
@@ -26,7 +39,8 @@ header a{color:var(--accent);font-weight:600;text-decoration:none;font-size:13px
 </head>
 <body>
 <header><h1>Austin home map</h1><span class="s" id="asof">Loading…</span><a id="back" href="#" hidden>Back to the review page</a></header>
-<div id="map"></div>
+<div class="body"><div id="map"></div>
+<aside><div class="bar"><label for="sort">Sort</label><select id="sort"><option value="plot">Price per lot sq ft</option><option value="psf">Price per living sq ft</option><option value="allin">Monthly cost</option><option value="ask">Price</option><option value="work">Miles to PAM Health</option></select></div><ol id="list"></ol></aside></div>
 <div class="legend"><div><i style="background:var(--ok)"></i>Within target</div><div><i style="background:var(--mid)"></i>Tracked</div><div><i style="background:var(--no)"></i>Over the ceiling</div><div><i style="background:#999"></i>Off market</div><div style="margin-top:4px">Teal ring: Liked</div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
@@ -47,13 +61,28 @@ fetch("listings.json?"+Date.now()).then(r=>r.json()).then(d=>{
   });
   const h=(d.landmarks||[]).find(m=>m.k==="home"),w=(d.landmarks||[]).find(m=>m.k==="work");
   if(h&&w)L.polyline([[h.lat,h.lng],[w.lat,w.lng]],{color:"#5b6874",weight:1.5,dashArray:"4 5",opacity:.7,interactive:false}).addTo(map);
+  const marks={};
   d.listings.forEach(l=>{
     if(!l.lat||!l.lng)return;pts.push([l.lat,l.lng]);
     if(l.liked)L.circleMarker([l.lat,l.lng],{radius:12,color:"#0f6b6f",weight:2,fill:false,interactive:false}).addTo(map);
     const mk=L.circleMarker([l.lat,l.lng],{radius:8,color:"#fff",weight:1.5,fillColor:COL[l.verdict_class]||COL.off,fillOpacity:.95}).addTo(map);
+    marks[l.id]=mk;
     mk.bindTooltip(l.address,{direction:"top",offset:[0,-8]});
     mk.bindPopup(`<b>${esc(l.address)}</b><br>${esc(l.city)} · ${usd(l.ask)} · ${esc(l.status)}<br>${esc(l.verdict)} · ${usd(l.allin)} a month<br>${l.sqft?`${usd(l.ask/l.sqft)}/sf (${l.sqft.toLocaleString()} sf)`:""}${l.sqft&&l.lot?" · ":""}${l.lot?`${usd(l.ask/l.lot)}/lot sf (${l.lot.toLocaleString()} sf lot)`:""}${l.sqft||l.lot?"<br>":""}${esc(l.loan_type)} loan at ${(l.rate*100).toFixed(3).replace(/0+$/,"").replace(/\.$/,"")}% · ${l.miles_to_work.toFixed(1)} mi to PAM Health<br>${l.redfin?`<a href="${esc(l.redfin)}" target="_blank" rel="noopener">Redfin</a> · `:""}<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address+", "+l.city+", TX")}" target="_blank" rel="noopener">Google Maps</a>`);
   });
+  const per=(l,k)=>l[k]?l.ask/l[k]:null;
+  const list=document.getElementById("list"),sortEl=document.getElementById("sort");
+  function renderList(){
+    const s=sortEl.value;
+    const val=l=>s==="plot"?per(l,"lot"):s==="psf"?per(l,"sqft"):s==="allin"?l.allin:s==="ask"?l.ask:l.miles_to_work;
+    const fmt=l=>{const v=val(l);if(v==null)return["—",""];
+      return s==="plot"?[usd(v),"per lot sq ft"]:s==="psf"?[usd(v),"per sq ft"]:s==="allin"?[usd(v),"a month"]:s==="ask"?[usd(v),"asking"]:[v.toFixed(1)+" mi","to PAM Health"]};
+    const rows=d.listings.filter(l=>l.lat&&l.lng).slice().sort((a,b)=>{const x=val(a),y=val(b);return (x==null)-(y==null)||x-y});
+    list.innerHTML=rows.map(l=>{const [v,u]=fmt(l);return `<li data-id="${esc(l.id)}"><i style="background:${COL[l.verdict_class]||COL.off}"></i><div><div class="a">${esc(l.address)}</div><div class="c">${esc(l.city)} · ${usd(l.ask)}${l.lot?" · "+l.lot.toLocaleString()+" sf lot":""}</div></div><div><div class="v">${v}</div><div class="u">${u}</div></div></li>`}).join("");
+  }
+  sortEl.addEventListener("change",renderList);renderList();
+  list.addEventListener("click",e=>{const li=e.target.closest("li");if(!li)return;const mk=marks[li.dataset.id];if(!mk)return;
+    map.setView(mk.getLatLng(),Math.max(map.getZoom(),14),{animate:true});mk.openPopup()});
   const fit=()=>{map.invalidateSize();if(pts.length)map.fitBounds(L.latLngBounds(pts).pad(.08))};fit();requestAnimationFrame(fit);setTimeout(fit,300);window.addEventListener('resize',()=>map.invalidateSize());
 }).catch(()=>{document.getElementById("asof").textContent="Could not load listings.json."});
 })();
