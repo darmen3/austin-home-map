@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-01",
+ "as_of": "2026-10-02",
  "review_url": "https://claude.ai/artifact/UMxmPwDFi26b7JDztzv8pf",
  "assumptions": {
   "target": 3300,
@@ -149,11 +149,11 @@
    "city": "Kyle",
    "lat": 30.019285,
    "lng": -97.817168,
-   "ask": 314900.0,
+   "ask": 314500.0,
    "status": "Active",
    "loan_type": "FHA",
    "rate": 0.0285,
-   "allin": 2033,
+   "allin": 2029,
    "verdict": "Tracked",
    "verdict_class": "mid",
    "liked": false,
