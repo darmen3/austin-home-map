@@ -56,7 +56,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 16.1,
-   "redfin": "https://www.redfin.com/TX/Manor/13705-Sherri-Berry-Way-78653/home/147336062"
+   "redfin": "https://www.redfin.com/TX/Manor/13705-Sherri-Berry-Way-78653/home/147336062",
+   "sqft": 1785,
+   "lot": 6246
   },
   {
    "id": "340-feathergrass-dr",
@@ -73,7 +75,9 @@
    "verdict_class": "mid",
    "liked": false,
    "miles_to_work": 36.0,
-   "redfin": "https://www.redfin.com/TX/Buda/340-Feathergrass-Dr-78610/home/33748183"
+   "redfin": "https://www.redfin.com/TX/Buda/340-Feathergrass-Dr-78610/home/33748183",
+   "sqft": 1469,
+   "lot": 6520
   },
   {
    "id": "7120-silver-star-ln",
@@ -90,7 +94,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 28.3,
-   "redfin": "https://www.redfin.com/TX/Austin/7120-Silver-Star-Ln-78744/home/190672807"
+   "redfin": "https://www.redfin.com/TX/Austin/7120-Silver-Star-Ln-78744/home/190672807",
+   "sqft": 1775,
+   "lot": 5318
   },
   {
    "id": "1915-kempwood-loop",
@@ -107,7 +113,9 @@
    "verdict_class": "off",
    "liked": true,
    "miles_to_work": 1.2,
-   "redfin": ""
+   "redfin": "",
+   "sqft": null,
+   "lot": null
   },
   {
    "id": "13413-abigail-adams-st",
@@ -124,7 +132,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 15.9,
-   "redfin": "https://www.redfin.com/TX/Manor/13413-Abigail-Adams-St-78653/home/172476401"
+   "redfin": "https://www.redfin.com/TX/Manor/13413-Abigail-Adams-St-78653/home/172476401",
+   "sqft": 1352,
+   "lot": 4399
   },
   {
    "id": "13000-brahmin-dr",
@@ -141,7 +151,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 21.2,
-   "redfin": "https://www.redfin.com/TX/Austin/13000-Brahmin-Dr-78724/home/172407667"
+   "redfin": "https://www.redfin.com/TX/Austin/13000-Brahmin-Dr-78724/home/172407667",
+   "sqft": 2101,
+   "lot": 7631
   },
   {
    "id": "309-treasure-trove-path",
@@ -158,7 +170,9 @@
    "verdict_class": "mid",
    "liked": false,
    "miles_to_work": 38.9,
-   "redfin": "https://www.redfin.com/TX/Kyle/309-Treasure-Trove-Path-78640/home/170651041"
+   "redfin": "https://www.redfin.com/TX/Kyle/309-Treasure-Trove-Path-78640/home/170651041",
+   "sqft": 1960,
+   "lot": 7405
   },
   {
    "id": "8524-dryfield-dr",
@@ -175,7 +189,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 14.6,
-   "redfin": ""
+   "redfin": "",
+   "sqft": null,
+   "lot": null
   },
   {
    "id": "13005-brahmin-dr",
@@ -192,7 +208,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 21.2,
-   "redfin": "https://www.redfin.com/TX/Austin/13005-Brahmin-Dr-78724/home/172407863"
+   "redfin": "https://www.redfin.com/TX/Austin/13005-Brahmin-Dr-78724/home/172407863",
+   "sqft": 2651,
+   "lot": 6568
   },
   {
    "id": "1709-perez-st-2",
@@ -209,7 +227,9 @@
    "verdict_class": "mid",
    "liked": false,
    "miles_to_work": 19.6,
-   "redfin": "https://www.redfin.com/TX/Austin/1709-Perez-St-78721/unit-2/home/146082933"
+   "redfin": "https://www.redfin.com/TX/Austin/1709-Perez-St-78721/unit-2/home/146082933",
+   "sqft": 1093,
+   "lot": 4112
   },
   {
    "id": "209-evening-dusk-dr",
@@ -226,7 +246,9 @@
    "verdict_class": "ok",
    "liked": false,
    "miles_to_work": 43.8,
-   "redfin": "https://www.redfin.com/TX/Kyle/209-Evening-Dusk-Dr-78640/home/167429889"
+   "redfin": "https://www.redfin.com/TX/Kyle/209-Evening-Dusk-Dr-78640/home/167429889",
+   "sqft": 2452,
+   "lot": 7148
   }
  ]
 }
