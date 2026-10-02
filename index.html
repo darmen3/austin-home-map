@@ -20,7 +20,9 @@ aside{width:300px;max-width:45vw;border-left:1px solid var(--line);background:va
 aside .bar{display:flex;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mute)}
 aside select{font:inherit;font-size:12px;flex:1;min-width:0}
 aside ol{list-style:none;margin:0;padding:0;overflow:auto;flex:1}
-aside li{padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center}
+aside li{padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;display:grid;grid-template-columns:10px 64px 1fr auto;gap:8px;align-items:center}
+aside li img{width:64px;height:44px;object-fit:cover;border-radius:4px;background:#eee;display:block}
+.leaflet-popup-content img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:6px;display:block;margin-bottom:6px}
 aside li:hover{background:#f3f5f6}
 aside li i{width:10px;height:10px;border-radius:50%;display:inline-block}
 aside li .a{font-weight:600;font-size:13px}
@@ -30,7 +32,7 @@ aside li .u{font-size:11px;color:var(--mute);text-align:right}
 @media (max-width:640px){.body{flex-direction:column}aside{width:auto;max-width:none;border-left:0;border-top:1px solid var(--line);height:40vh}}
 .lmk{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .lmk.home{border-color:var(--accent);color:var(--accent)}
-.leaflet-popup-content{font-size:13px;line-height:1.4;margin:10px 14px}
+.leaflet-popup-content{font-size:13px;line-height:1.4;margin:10px 14px;min-width:220px}
 .leaflet-popup-content b{font-size:14px}
 .leaflet-popup-content a{color:var(--accent);font-weight:600}
 .legend{position:absolute;right:10px;bottom:28px;z-index:1000;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--mute);box-shadow:0 1px 4px rgba(0,0,0,.15)}
@@ -68,7 +70,7 @@ fetch("listings.json?"+Date.now()).then(r=>r.json()).then(d=>{
     const mk=L.circleMarker([l.lat,l.lng],{radius:8,color:"#fff",weight:1.5,fillColor:COL[l.verdict_class]||COL.off,fillOpacity:.95}).addTo(map);
     marks[l.id]=mk;
     mk.bindTooltip(l.address,{direction:"top",offset:[0,-8]});
-    mk.bindPopup(`<b>${esc(l.address)}</b><br>${esc(l.city)} · ${usd(l.ask)} · ${esc(l.status)}<br>${esc(l.verdict)} · ${usd(l.allin)} a month<br>${l.sqft?`${usd(l.ask/l.sqft)}/sf (${l.sqft.toLocaleString()} sf)`:""}${l.sqft&&l.lot?" · ":""}${l.lot?`${usd(l.ask/l.lot)}/lot sf (${l.lot.toLocaleString()} sf lot)`:""}${l.sqft||l.lot?"<br>":""}${esc(l.loan_type)} loan at ${(l.rate*100).toFixed(3).replace(/0+$/,"").replace(/\.$/,"")}% · ${l.miles_to_work.toFixed(1)} mi to PAM Health<br>${l.redfin?`<a href="${esc(l.redfin)}" target="_blank" rel="noopener">Redfin</a> · `:""}<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address+", "+l.city+", TX")}" target="_blank" rel="noopener">Google Maps</a>`);
+    mk.bindPopup(`${l.photo?`<img src="${esc(l.photo)}" alt="">`:""}<b>${esc(l.address)}</b><br>${esc(l.city)} · ${usd(l.ask)} · ${esc(l.status)}<br>${esc(l.verdict)} · ${usd(l.allin)} a month<br>${l.sqft?`${l.sqft.toLocaleString()} sf (${usd(l.ask/l.sqft)}/sf)`:""}${l.sqft&&l.lot?" · ":""}${l.lot?`${l.lot.toLocaleString()} sf lot (${usd(l.ask/l.lot)}/sf)`:""}${l.sqft||l.lot?"<br>":""}${esc(l.loan_type)} loan at ${(l.rate*100).toFixed(3).replace(/0+$/,"").replace(/\.$/,"")}% · ${l.miles_to_work.toFixed(1)} mi to PAM Health<br>${l.redfin?`<a href="${esc(l.redfin)}" target="_blank" rel="noopener">Redfin</a> · `:""}<a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.address+", "+l.city+", TX")}" target="_blank" rel="noopener">Google Maps</a>`);
   });
   const per=(l,k)=>l[k]?l.ask/l[k]:null;
   const list=document.getElementById("list"),sortEl=document.getElementById("sort");
@@ -78,7 +80,7 @@ fetch("listings.json?"+Date.now()).then(r=>r.json()).then(d=>{
     const fmt=l=>{const v=val(l);if(v==null)return["—",""];
       return s==="plot"?[usd(v),"per lot sq ft"]:s==="psf"?[usd(v),"per sq ft"]:s==="allin"?[usd(v),"a month"]:s==="ask"?[usd(v),"asking"]:[v.toFixed(1)+" mi","to PAM Health"]};
     const rows=d.listings.filter(l=>l.lat&&l.lng).slice().sort((a,b)=>{const x=val(a),y=val(b);return (x==null)-(y==null)||x-y});
-    list.innerHTML=rows.map(l=>{const [v,u]=fmt(l);return `<li data-id="${esc(l.id)}"><i style="background:${COL[l.verdict_class]||COL.off}"></i><div><div class="a">${esc(l.address)}</div><div class="c">${esc(l.city)} · ${usd(l.ask)}${l.lot?" · "+l.lot.toLocaleString()+" sf lot":""}</div></div><div><div class="v">${v}</div><div class="u">${u}</div></div></li>`}).join("");
+    list.innerHTML=rows.map(l=>{const [v,u]=fmt(l);return `<li data-id="${esc(l.id)}"><i style="background:${COL[l.verdict_class]||COL.off}"></i>${l.photo?`<img src="${esc(l.photo)}" alt="" loading="lazy">`:"<span></span>"}<div><div class="a">${esc(l.address)}</div><div class="c">${esc(l.city)} · ${usd(l.ask)}${l.lot?" · "+l.lot.toLocaleString()+" sf lot":""}</div></div><div><div class="v">${v}</div><div class="u">${u}</div></div></li>`}).join("");
   }
   sortEl.addEventListener("change",renderList);renderList();
   list.addEventListener("click",e=>{const li=e.target.closest("li");if(!li)return;const mk=marks[li.dataset.id];if(!mk)return;
