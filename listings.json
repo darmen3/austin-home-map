@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-03",
+ "as_of": "2026-10-05",
  "review_url": "https://claude.ai/artifact/UMxmPwDFi26b7JDztzv8pf",
  "assumptions": {
   "target": 3300,
@@ -41,6 +41,26 @@
   }
  ],
  "listings": [
+  {
+   "id": "159-invierno-st",
+   "address": "159 Invierno St",
+   "city": "Kyle",
+   "lat": 29.9891649,
+   "lng": -97.8592582,
+   "ask": 289000.0,
+   "status": "Active",
+   "loan_type": "FHA",
+   "rate": 0.02875,
+   "allin": 2076,
+   "verdict": "Tracked",
+   "verdict_class": "mid",
+   "liked": false,
+   "miles_to_work": 41.6,
+   "redfin": "https://www.redfin.com/TX/Kyle/159-Invierno-St-78640/home/33704220",
+   "sqft": 1764,
+   "lot": 8415,
+   "photo": "photos/159-invierno-st.jpg"
+  },
   {
    "id": "13705-sherri-berry-way",
    "address": "13705 Sherri Berry Way",
@@ -294,7 +314,7 @@
    "allin": 3197,
    "verdict": "Within target",
    "verdict_class": "ok",
-   "liked": false,
+   "liked": true,
    "miles_to_work": 29.4,
    "redfin": "https://www.redfin.com/TX/Austin/10221-Buster-Dr-78748/home/169737581",
    "sqft": 2127,
