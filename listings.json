@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-05",
+ "as_of": "2026-10-07",
  "review_url": "https://claude.ai/artifact/UMxmPwDFi26b7JDztzv8pf",
  "assumptions": {
   "target": 3300,
@@ -488,12 +488,12 @@
    "lat": 30.3671783,
    "lng": -97.5357716,
    "ask": 325000.0,
-   "status": "Active",
+   "status": "OFF MARKET - withdrawn by 2026-10-07",
    "loan_type": "FHA?",
    "rate": 0.0331,
    "allin": 2342,
-   "verdict": "Within target",
-   "verdict_class": "ok",
+   "verdict": "Off market",
+   "verdict_class": "off",
    "liked": false,
    "miles_to_work": 15.1,
    "redfin": "https://www.redfin.com/TX/Manor/11816-Jackson-Falls-Way-78653/home/169745502",
