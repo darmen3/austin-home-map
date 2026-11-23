@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-20",
+ "as_of": "2026-11-23",
  "review_url": "https://claude.ai/artifact/UMxmPwDFi26b7JDztzv8pf",
  "assumptions": {
   "target": 3300,
@@ -508,7 +508,7 @@
    "lat": 30.1638182,
    "lng": -97.8177739,
    "ask": 434000.0,
-   "status": "Active",
+   "status": "Contingent",
    "loan_type": "VA",
    "rate": 0.0351,
    "allin": 2893,
@@ -708,7 +708,7 @@
    "lat": 30.2830768,
    "lng": -97.6922901,
    "ask": 479000.0,
-   "status": "Active | not in 2026-11-02 snapshot | not in 2026-11-20 snapshot",
+   "status": "Active per other sites",
    "loan_type": "UNKNOWN",
    "rate": 0.025,
    "allin": 3443,
