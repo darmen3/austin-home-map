@@ -668,7 +668,7 @@
    "lat": 30.5020388,
    "lng": -97.6624228,
    "ask": 300000.0,
-   "status": "Active",
+   "status": "Contingent",
    "loan_type": "UNKNOWN",
    "rate": 0.028,
    "allin": 1706,
